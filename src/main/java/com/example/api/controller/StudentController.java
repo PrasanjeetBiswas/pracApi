@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -36,7 +36,7 @@ public class StudentController {
         this.ser = ser;
     }
     
-    @PostMapping("/student/addStudent")
+    @PostMapping("/v1/addStudent")
     public String postMethodName(@Valid @RequestBody ReqStudentDto dto) {
         //TODO: process POST request
 
@@ -45,22 +45,22 @@ public class StudentController {
         return "New Student Added";
     }
 
-    @GetMapping("/student/veiwAllStudents")
+    @GetMapping("/v1/veiwAllStudents")
     public List<ResStudentDto> getMethodName() {
         return ser.veiwAllStudents();
     }
 
-    @GetMapping("/student/name/{name}")
+    @GetMapping("/v1/name/{name}")
 public List<ResStudentDto> getStudentByName(@PathVariable String name) {
     return ser.findStudentByName(name);
 }
 
-    @GetMapping("/student/id/{id}")
+    @GetMapping("/v1/id/{id}")
 public ResStudentDto getStudentById(@PathVariable Long id) {
     return ser.findStudentById(id);
 }
 
-@PutMapping("/student/updateStudent/{id}")
+@PutMapping("/v1/updateStudent/{id}")
 public String putMethodName(@PathVariable Long id, @RequestBody StudentModel student) {
     //TODO: process PUT request
 
@@ -69,18 +69,18 @@ public String putMethodName(@PathVariable Long id, @RequestBody StudentModel stu
     return "Student Has Been Updated";
 }
     
-@DeleteMapping("student/delate/{id}")
+@DeleteMapping("v1/delate/{id}")
 public String deleteMethod(@PathVariable Long id){
     ser.deleteStudent(id);
     return "Student Has Been Deleted";
 }
 
-@GetMapping("student/courseFilter/{course}")
+@GetMapping("v1/courseFilter/{course}")
 public List<ResStudentDto> getMethodName(@PathVariable String course) {
     return ser.fliterByCourse(course);
 }
 
-    @GetMapping("/student/batchfilter/{batch}")
+    @GetMapping("/v1/batchfilter/{batch}")
     public List<ResStudentDto> getMethodBatch(@PathVariable String batch) {
         return ser.filterByBatch(batch);
     }

@@ -9,11 +9,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Bean
-public SecurityFilterChain securityFilterChain(HttpSecurity req){
-    req.authorizeHttpRequests(auth -> auth.requestMatchers("/student/**").permitAll()
-    .requestMatchers("/private/**").authenticated()
-);
-return req.build();
+  @Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http)
+        throws Exception {
+
+    http
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/v1/**").permitAll()
+                .requestMatchers("/private/**").authenticated()
+                .anyRequest().authenticated()
+        );
+
+    return http.build();
 }
 }

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.api.dtos.requestDtos.ReqStudentDto;
 import com.example.api.dtos.responceDtos.ResStudentDto;
+import com.example.api.exceptions.DuplicatePhoneException;
+import com.example.api.exceptions.StudentNotFoundException;
 import com.example.api.model.StudentModel;
 import com.example.api.repository.Repository;
 import com.example.api.service.serviceInterface.ServiceInerface;
@@ -25,6 +27,11 @@ public class ServiceLogic implements ServiceInerface {
 
 @Override
 public void addStudents(ReqStudentDto dto){
+
+            if(repo.existsByNum(dto.getNum())){
+        throw new DuplicatePhoneException(
+                "Phone number already exists");
+    }
 
    StudentModel st = StudentModel.builder()
     .name(dto.getName())
@@ -83,7 +90,7 @@ public ResStudentDto findStudentById(Long id) {
                     .batch(student.getBatch())
                     .date(student.getDate())
                     .build())
-            .orElseThrow(() -> new RuntimeException("Student not found"));
+            .orElseThrow(() -> new StudentNotFoundException("Student Not Found With Id :- " + id));
 }
 
 
@@ -101,8 +108,19 @@ if(student!=null){
                 St.setPassword(student.getPassword());
         }
         if(student.getNum() != null){
-                St.setNum(student.getNum());
-        }
+
+    boolean phoneExists =
+            repo.existsByNum(student.getNum());
+
+    if(phoneExists &&
+       !student.getNum().equals(St.getNum())) {
+
+        throw new DuplicatePhoneException(
+                "Phone number already exists");
+    }
+
+    St.setNum(student.getNum());
+}
         if(student.getBatch() != null){
                 St.setBatch(student.getBatch());
         }
