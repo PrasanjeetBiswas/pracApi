@@ -5,12 +5,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.api.dtos.requestDtos.ReqStudentDto;
 import com.example.api.dtos.responceDtos.ResStudentDto;
 import com.example.api.model.StudentModel;
+import com.example.api.service.logService.LogService;
 import com.example.api.service.serviceInterface.ServiceInterface;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,14 +28,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 @Tag(name="Student Apis")
 @SecurityRequirement(name = "bearerAuth")
 @RestController
+@RequiredArgsConstructor
 public class StudentController {
+
+    private final LogService logSer;
 
     private final ServiceInterface ser;
     // private final Repository repo;
 
-    StudentController(ServiceInterface ser) {
-        this.ser = ser;
-    }
+    // StudentController(ServiceInterface ser) {
+    //     this.ser = ser;
+    // }
 
     @Operation(summary = "Add a new Student")
     @PostMapping("/v1/addStudent")
@@ -41,6 +46,7 @@ public class StudentController {
 
         ser.addStudents(dto);
 
+        logSer.createLog(dto.getName());
         return "New Student Added";
     }
 

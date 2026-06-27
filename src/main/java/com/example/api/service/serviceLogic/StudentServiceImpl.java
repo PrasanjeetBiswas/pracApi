@@ -13,14 +13,18 @@ import com.example.api.model.StudentModel;
 import com.example.api.repository.StudentRepository;
 import com.example.api.service.serviceInterface.ServiceInterface;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class StudentServiceImpl implements ServiceInterface {
 
+
         public final StudentRepository repo;
 
-        StudentServiceImpl(StudentRepository repo) {
-                this.repo = repo;
-        }
+        // StudentServiceImpl(StudentRepository repo) {
+        //         this.repo = repo;
+        // }
 
         @Override
         public void addStudents(ReqStudentDto dto) {
@@ -43,6 +47,11 @@ public class StudentServiceImpl implements ServiceInterface {
                                 .course(dto.getCourse())
                                 .batch(dto.getBatch())
                                 .build();
+
+                                
+                if(st == null){
+                        throw new IllegalArgumentException("Student Data Is Empty");
+                }
 
                 repo.save(st);
         }
@@ -82,6 +91,10 @@ public class StudentServiceImpl implements ServiceInterface {
         @Override
         public ResStudentDto findStudentById(Long id) {
 
+                if (id == null) {
+    throw new IllegalArgumentException("Id cannot be null");
+}
+
                 return repo.findById(id)
                                 .map(student -> ResStudentDto.builder()
                                                 .name(student.getName())
@@ -95,6 +108,10 @@ public class StudentServiceImpl implements ServiceInterface {
 
         @Override
         public void updateStudent(Long id, StudentModel student) {
+
+                if (id == null) {
+                        throw new IllegalArgumentException("Id Cannot Be Empty");
+                }
                 StudentModel St = repo.findById(id).orElse(null);
                 if (student != null) {
                         if (student.getName() != null) {
@@ -137,12 +154,19 @@ public class StudentServiceImpl implements ServiceInterface {
                         }
                 }
 
+                if(St == null){
+                        throw new IllegalArgumentException("Student Date Is Empty");
+                }
+
                 repo.save(St);
 
         }
 
         @Override
         public void deleteStudent(Long id) {
+                if(id == null){
+                        throw new IllegalArgumentException("Id cannot be null");
+                }
                 repo.deleteById(id);
         }
 

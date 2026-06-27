@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -54,5 +55,16 @@ public ResponseEntity<ErrorResponse> handleDuplicateEmails(DuplicateEmailExcepti
     error.setMessage(ex.getMessage());
 
     return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+}
+
+@ExceptionHandler(IllegalArgumentException.class)
+public ResponseEntity<ErrorResponse> handleIllegalArgException(IllegalArgumentException ex){
+    ErrorResponse error = new ErrorResponse();
+
+    error.setTimeStamp(LocalDateTime.now());
+    error.setStatus(400);
+    error.setMessage(ex.getMessage());
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 }
 }
